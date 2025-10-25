@@ -1,0 +1,25 @@
+[package]
+name = "tokiotutorial"
+version = "0.1.0"
+edition = "2024"
+
+build = "build.rs"
+
+[[bin]]
+name = "inference"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1.47.1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+capnp = "0.21.5"
+capnp-rpc = "0.21"
+futures = "*"
+tokio-util = { version = "*", features = ["full"] }
+num_cpus = "1.17.0"
+
+
+[build-dependencies]
+capnp = "0.21.5"
+capnpc = "0.21"
