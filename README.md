@@ -24,11 +24,13 @@ Here is the output of an example server:
 cargo run server 127.0.0.1:5000
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
      Running `target/debug/inference server '127.0.0.1:5000'`
-Listening on 127.0.0.1:5000 with 28 worker threads...
-Dispatching new connection to worker 0
-[Worker 0] RPC system started for peer: 127.0.0.1:39284
-Received content: Hello this is my first message, what will the result be?
-[Worker 0] RPC system for peer 127.0.0.1:39284 finished cleanly.
+     Listening on 127.0.0.1:5000 with 28 worker threads...
+     Dispatching new connection to worker 0
+     [Worker 0] received a new connection from 127.0.0.1:50332
+     [Worker 0] `spawn_local` is running on core [CoreId { id: 0 }]
+     [Worker 0] RPC system started for peer: 127.0.0.1:50332
+     Received content: Hello this is my first message, what will the result be?
+     [Worker 0] RPC system for peer 127.0.0.1:50332 finished cleanly.
 ```
 
 Here is the output of an example client:
