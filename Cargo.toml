@@ -18,6 +18,7 @@ capnp-rpc = "0.21"
 futures = "*"
 tokio-util = { version = "*", features = ["full"] }
 num_cpus = "1.17.0"
+core_affinity = "*"
 
 
 [build-dependencies]

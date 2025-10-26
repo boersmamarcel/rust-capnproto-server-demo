@@ -3,6 +3,7 @@ use std::net::ToSocketAddrs;
 use capnp_rpc::{RpcSystem, pry, rpc_twoparty_capnp, twoparty};
 use tokio::net::TcpStream;
 
+use core_affinity;
 use tokio::sync::mpsc;
 
 use crate::analysis;
@@ -64,6 +65,19 @@ fn worker(id: usize, mut rx: mpsc::Receiver<TcpStream>) {
                 .unwrap_or_else(|_| "unknown".to_string());
 
             tokio::task::spawn_local(async move {
+                println!(
+                    "[Worker {}] received a new connection from {}",
+                    id, peer_addr
+                );
+                if let Some(core_ids) = core_affinity::get_core_ids() {
+                    if !core_ids.is_empty() {
+                        println!(
+                            "[Worker {}] `spawn_local` is running on core {:?}",
+                            id, core_ids
+                        );
+                    }
+                }
+
                 let stream_impl = StreamImpl {};
 
                 // here we create the client that handles the output of the stream
@@ -104,16 +118,20 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         .expect("could not parse address");
     let listener = tokio::net::TcpListener::bind(&addr).await?;
 
-    let num_workers = num_cpus::get();
+    let core_ids = core_affinity::get_core_ids().unwrap();
+    let num_workers = core_ids.len();
     let mut senders = Vec::new();
 
-    for i in 0..num_workers {
+    for (i, core_id) in core_ids.into_iter().enumerate() {
         let (tx, rx) = mpsc::channel(100);
         senders.push(tx);
         // We cannot create multiple Tokio runtimes on the same OS thread - each needs its own dedicated thread.
         // spinning up OS threads for each worker
         std::thread::spawn(move || {
-            worker(i, rx);
+            // Pin this thread to a single CPU core.
+            if core_affinity::set_for_current(core_id) {
+                worker(i, rx);
+            }
         });
     }
 
