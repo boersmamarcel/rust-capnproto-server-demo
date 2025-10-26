@@ -3,7 +3,7 @@ In this tutorial, we will learn how to build the foundation of a fast and scalab
 
 Note that this tutorial is part of a series of tutorials, and that in the final tutorial of the series we will build the complete system. In this part, we focus only on the asynchronous programming concepts and zero-copy data transfer. Therefore, our application will receive messages from a client and respond with the payload in reverse order.
 
-See the Medium article for more details.
+See the [Medium article](https://medium.com/@marcelboersma/part-1-a-high-performance-server-in-rust-b3e7497809bd) for more details.
 
 # Run the Application
 To run the application, execute the following command in the terminal to start the server:
